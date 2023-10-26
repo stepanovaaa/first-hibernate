@@ -1,11 +1,8 @@
 package hibernate;
 
-import hibernate.entity.User;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.Session;
 import org.hibernate.query.NativeQuery;
-
-import java.util.List;
 
 @Log4j2
 public class Main {
@@ -14,13 +11,22 @@ public class Main {
         // получаем готовый Session Factory и сразу создаем сессию
         Session session = HibernateUtil.getSessionFactory().openSession();
 
-        String qry = "select * from todolist.user_data";
-        NativeQuery sqlQuery = session.createNativeQuery(qry, User.class);
-        sqlQuery.addEntity(User.class);
-        sqlQuery.setMaxResults(10);
+        String qry = "select " +
+                "    count(u.id), " +
+                "    substring(u.email, position('@' in u.email)+1, length(u.email)) as domainmail " +
+                "from todolist.user_data u " +
+                "where u.email like '%@%' " +
+                "group by substring(u.email, position('@' in u.email)+1, length(u.email))";
+        NativeQuery<Object[]> sqlQuery = session.createNativeQuery(qry, Object[].class);
 
-        List<User> list = sqlQuery.list();
-        log.info(list);
+        log.info(sqlQuery.getResultList());
+
+        for(Object obj: sqlQuery.getResultList()){
+            Object[] objArray = (Object[]) obj;
+            log.info(objArray[0]);
+            log.info(objArray[1]);
+            log.info("------");
+        }
 
         session.close(); // закрыть сессию
 
