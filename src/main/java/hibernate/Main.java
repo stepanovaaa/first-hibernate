@@ -2,7 +2,7 @@ package hibernate;
 
 import hibernate.entity.User;
 import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaDelete;
+import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.criteria.Root;
 import lombok.extern.log4j.Log4j2;
 import org.hibernate.Session;
@@ -29,13 +29,24 @@ public class Main {
 //        Query query = session.createQuery(criteriaQuery);
 //        List<User> users = query.getResultList();
 
+//        CriteriaBuilder cb = session.getCriteriaBuilder();
+//        CriteriaDelete<User> criteriaDelete = cb.createCriteriaDelete(User.class);
+//        Root<User> root = criteriaDelete.from(User.class);
+//        criteriaDelete.where(cb.equal(root.get("id"),5003));
+//
+//        Transaction transaction = session.beginTransaction();
+//        session.createQuery(criteriaDelete).executeUpdate();
+//        transaction.commit();
+
         CriteriaBuilder cb = session.getCriteriaBuilder();
-        CriteriaDelete<User> criteriaDelete = cb.createCriteriaDelete(User.class);
-        Root<User> root = criteriaDelete.from(User.class);
-        criteriaDelete.where(cb.equal(root.get("id"),5003));
+        CriteriaUpdate<User> criteriaUpdate = cb.createCriteriaUpdate(User.class);
+        Root<User> root = criteriaUpdate.from(User.class);
+
+        criteriaUpdate.set("email", "sgoihdfugh@gmail.ru");
+        criteriaUpdate.where(cb.equal(root.get("id"), 3));
 
         Transaction transaction = session.beginTransaction();
-        session.createQuery(criteriaDelete).executeUpdate();
+        session.createQuery(criteriaUpdate).executeUpdate();
         transaction.commit();
 
         session.close(); // закрыть сессию
