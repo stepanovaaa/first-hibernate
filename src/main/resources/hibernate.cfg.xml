@@ -16,6 +16,7 @@
         <property name="hibernate.hibernate.session.events.log">true</property>
 
         <mapping class="hibernate.entity.User"/>
+        <mapping class="hibernate.entity.Category"/>
         <!-- DB schema will be updated if needed -->
         <!-- <property name="hibernate.hbm2ddl.auto">update</property> -->
     </session-factory>
